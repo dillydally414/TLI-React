@@ -1,40 +1,18 @@
 import { createStore } from '@reduxjs/toolkit'
-import { AnyAction } from 'redux';
+import { combineReducers } from 'redux';
+import { pointsReducer, tabReducer } from '.';
 
 export type GameState = {
   points: number,
   tab: number,
-  subTab: number,
 }
 
-const initialState: GameState = {
-  points: 0,
-  tab: 1,
-  subTab: 0,
-};
-
-function gameReducer(state: GameState = initialState, action: AnyAction): GameState {
-  switch (action.type) {
-    case 'update-points':
-      return {
-        ...state,
-        points: action.payload
-      };
-    case 'update-tab':
-      return {
-        ...state,
-        tab: action.payload,
-      };;
-    default:
-      return state;
-  }
-}
+const gameReducer = combineReducers({
+  points: pointsReducer,
+  tab: tabReducer,
+});
 
 export const store = createStore(gameReducer);
 
-store.subscribe(() => console.log(store.getState()));
-
-export {
-  selectTabValue,
-  selectPointValue,
-} from './selectors'
+export * from './selectors/'
+export * from './reducers/';

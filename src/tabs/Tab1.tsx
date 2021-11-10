@@ -1,9 +1,12 @@
 import { Button, Row, Col } from '../components';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { canBuy, buyUpgrade } from '../functions';
 import { SubMenu } from 'rc-menu';
 import { selectPointValue, store } from '../data';
+import React from 'react';
+
 const tabColor = "#00FF00";
 
 const StyledP = styled.p`
@@ -74,7 +77,7 @@ function updatePoints(upgrades: Array<number>) {
 }
 
 function Tab1() {
-  const points: number = selectPointValue(store.getState());
+  const points: number = useSelector(selectPointValue);
   const [subtab, setSubTab] = useState(1);
   const [upgrades, setUpgrades] = useState<Array<number>>([0, 0, 0]);
   setInterval(() => updatePoints(upgrades), 100);

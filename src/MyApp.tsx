@@ -3,6 +3,8 @@ import { Tab1 } from './tabs';
 import styled from 'styled-components';
 import { store, selectTabValue } from './data';
 import { changeTab } from './functions';
+import { Provider } from 'react-redux'
+import React from 'react';
 
 const green = "#00FF00";
 const yellow = "#FFFF00";
@@ -54,23 +56,25 @@ const OutlinedCol = styled(Col)`
 function App() {
   const currentTab: number = selectTabValue(store.getState());
   return (
-    <Background>
-      <OutlinedCol>
-        <RedTabButton
-          color={currentTab === 3 ? red : dimRed}
-          onClick={() => changeTab(3)}
-        />
-        <YellowTabButton
-          color={currentTab === 2 ? yellow : dimYellow}
-          onClick={() => changeTab(2)}
-        />
-        <GreenTabButton
-          color={currentTab === 1 ? green : dimGreen}
-          onClick={() => changeTab(1)}
-        />
-      </OutlinedCol>
-      {currentTab === 1 && <Tab1/>}
-    </Background>
+    <Provider store={store}>
+      <Background>
+        <OutlinedCol>
+          <RedTabButton
+            color={currentTab === 3 ? red : dimRed}
+            onClick={() => changeTab(3)}
+          />
+          <YellowTabButton
+            color={currentTab === 2 ? yellow : dimYellow}
+            onClick={() => changeTab(2)}
+          />
+          <GreenTabButton
+            color={currentTab === 1 ? green : dimGreen}
+            onClick={() => changeTab(1)}
+          />
+        </OutlinedCol>
+        {currentTab === 1 && <Tab1 />}
+      </Background>
+    </Provider>
   );
 }
 
