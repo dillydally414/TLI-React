@@ -20,22 +20,31 @@ const StyledButton = styled.button`
 function Button({
   title = "",
   description = "",
-  onClick,
+  effect = "",
+  onClick = () => {},
   className = "",
   color = "black",
+  cost = -1,
+  count = 0,
   style = {},
 }: {
   title?: string,
   description?: string,
-  onClick: Function,
+  effect?: string,
+  onClick?: Function,
   className?: string,
   color?: string,
+  cost?: number,
+  count?: number,
   style?: React.CSSProperties,
 }) {
   return (
     <StyledButton className={className} style={style} onClick={() => onClick()}>
       {title !== "" && <h2>{title}</h2>}
       {description !== "" && <p>{description}</p>}
+      {effect !== "" && <p>Effect: {effect}</p>}
+      {count !== 0 && <p>Count: {count}</p>}
+      {cost !== -1 && <p>Cost: {cost}</p>}
     </StyledButton>
   );
 }

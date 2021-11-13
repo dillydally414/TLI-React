@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { canBuy, buyUpgrade } from '../functions';
 import { SubMenu } from 'rc-menu';
-import { selectPointValue, store } from '../data';
+import { selectSpeedValue, selectTab1UpgradeValue, store } from '../data';
 import React from 'react';
+import { cost } from '../functions/upgrades';
 
-const tabColor = "#00FF00";
+const interval: number = 50;
+setInterval(updateSpeed, interval);
+const tabColor: string = "#00FF00";
 
 const StyledP = styled.p`
   color: white;
@@ -43,13 +46,13 @@ const UpgradeButton = styled(Button)`
   && { 
     align-items: center;
     background: transparent;
-    border-radius: 5px;
+    border-radius: 1rem;
     border-color: ${tabColor};
-    border-weight: 5px;
+    border-weight: 1rem;
     display: flex;
     justify-content: center;
     width: 10rem;
-    height: 5rem;
+    height: 10rem;
     font-size: 1rem;
     text-align: center;
     margin: 1rem;
@@ -64,23 +67,34 @@ const UpgradeButton = styled(Button)`
   }
 `;
 
-function updatePoints(upgrades: Array<number>) {
-  const points: number = selectPointValue(store.getState());
-  let newPoints = points;
+const Milestone = styled(UpgradeButton)`
+  && {
+    cursor: default;
+  }
+
+  :hover {
+    color: ${tabColor};
+    border-color: ${tabColor};
+  }
+`
+
+function updateSpeed(): void {
+  const speed: number = selectSpeedValue(store.getState());
+  const upgrades: Array<number> = selectTab1UpgradeValue(store.getState());
+  let newSpeed: number = speed;
   for (let i = 0; i < upgrades.length; i++) {
-    newPoints += (i + 1) * upgrades[i];
+    newSpeed += (interval / 1000) * ((i + 1) * upgrades[i]);
   }
   store.dispatch({
-    type: 'update-points',
-    payload: newPoints,
+    type: 'update-speed',
+    payload: newSpeed,
   });
 }
 
 function Tab1() {
-  const points: number = useSelector(selectPointValue);
+  const speed: number = useSelector(selectSpeedValue);
   const [subtab, setSubTab] = useState(1);
-  const [upgrades, setUpgrades] = useState<Array<number>>([0, 0, 0]);
-  setInterval(() => updatePoints(upgrades), 100);
+  const upgrades: Array<number> = useSelector(selectTab1UpgradeValue);
   return (
     <div>
       <Row>
@@ -89,36 +103,42 @@ function Tab1() {
       </Row>
       {subtab === 1 &&
         <Col>
-          <Row><StyledP>{points}</StyledP></Row>
+          <Row><StyledP>{speed.toFixed(2)}</StyledP></Row>
           <Row>
-            <Button title="Upgrade 1"
+            <UpgradeButton title="Upgrade 1"
               description={upgrades[0].toString()}
-              style={canBuy(upgrades, 0) ? {} : {
-                filter: "brightness(0.5)"
+              cost={cost(0)}
+              style={canBuy(0) ? {} : {
+                filter: "brightness(0.5)",
+                cursor: "default",
               }}
-              onClick={() => { setUpgrades([upgrades[0] + 1, ...upgrades.slice(1)]); }} />
-            <Button title="Upgrade 2"
+              onClick={() => buyUpgrade(0)}
+            />
+            <UpgradeButton title="Upgrade 2"
               description={upgrades[1].toString()}
-              style={canBuy(upgrades, 1) ? {} : {
-                filter: "brightness(0.5)"
+              cost={cost(1)}
+              style={canBuy(1) ? {} : {
+                filter: "brightness(0.5)",
+                cursor: "default",
               }}
-              onClick={() => { setUpgrades(buyUpgrade(upgrades, 1)) }} />
-            <Button title="Upgrade 3"
+              onClick={() => buyUpgrade(1)} />
+            <UpgradeButton title="Upgrade 3"
               description={upgrades[2].toString()}
-              style={canBuy(upgrades, 2) ? {} : {
-                filter: "brightness(0.5)"
+              cost={cost(2)}
+              style={canBuy(2) ? {} : {
+                filter: "brightness(0.5)",
+                cursor: "default",
               }}
-              onClick={() => { setUpgrades([...upgrades.slice(0, 2), upgrades[2] + 1]); }} />
+              onClick={() => buyUpgrade(2)} />
           </Row>
         </Col>
       }
       {subtab === 2 &&
         <Row>
-          <Button title="Milestone 1"
-            description="milestone 1"
-            onClick={() => { console.log("upgrade 1"); }} />
-          <Button title="Milestone 2" onClick={() => { console.log("upgrade 2"); }} />
-          <Button title="Milestone 3" onClick={() => { console.log("upgrade 3"); }} />
+          <Milestone title="Milestone 1"
+            description="milestone 1" />
+          <Milestone title="Milestone 2" />
+          <Milestone title="Milestone 3" />
         </Row>}
     </div>
   );

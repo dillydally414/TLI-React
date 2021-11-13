@@ -1,18 +1,30 @@
 import { createStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux';
-import { pointsReducer, tabReducer } from '.';
+import { speedReducer, tabReducer, tab1Reducer } from './reducers';
+import { GameState, Tab1State } from './types';
 
-export type GameState = {
-  points: number,
-  tab: number,
-}
+/*
+this.game = {
+        color: 0,
+        tab: 1,
+        sinceLastSave: 0,
+        progress: [],
+        speed: 0,
+        push: 0,
+        fuelQuality: 0,
+        fuel: 1000,
+        fuelCapacity: 1000,
+        gasBrick: false
+    }
+*/
 
 const gameReducer = combineReducers({
-  points: pointsReducer,
+  speed: speedReducer,
   tab: tabReducer,
+  tab1: tab1Reducer,
 });
 
 export const store = createStore(gameReducer);
 
-export * from './selectors/'
-export * from './reducers/';
+export * from './selectors';
+export * from './reducers';

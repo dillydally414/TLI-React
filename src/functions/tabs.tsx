@@ -1,16 +1,16 @@
-import { selectTabValue, selectPointValue, store } from "../data";
+import {  selectSpeedValue, selectTabValue, store } from "../data";
 
 export function changeTab(newTab: number): void {
   const currTab: number = selectTabValue(store.getState());
-  const points: number = selectPointValue(store.getState());
+  const speed: number = selectSpeedValue(store.getState());
   switch (newTab) {
     case 1:
       break;
     case 2:
-      if (points >= 100 && currTab === 1) break;
+      if (speed >= 100 && currTab === 1) break;
       return;
     case 3:
-      if (points >= 100 && currTab === 2) break;
+      if (speed >= 100 && currTab === 2) break;
       return;
     default:
       return;
